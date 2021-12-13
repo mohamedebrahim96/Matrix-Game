@@ -7,6 +7,7 @@ package com.mohamed.myapplication.ui.main.adapter
  */
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,9 +19,14 @@ import com.mohamed.myapplication.model.DataModel
 
 class PhotoAdapter(var context: Context) : RecyclerView.Adapter<PhotoAdapter.ViewHolder>() {
 
-    var dataList = emptyList<DataModel>()
+    var dataList = mutableListOf<DataModel>()
 
-    internal fun setDataList(dataList: List<DataModel>) {
+    var positions = arrayListOf<Int>()
+
+    var counter = 1
+
+    //val positionList: MutableList<Int> = mutableListOf()
+    internal fun setDataList(dataList: MutableList<DataModel>) {
         this.dataList = dataList
     }
 
@@ -46,10 +52,31 @@ class PhotoAdapter(var context: Context) : RecyclerView.Adapter<PhotoAdapter.Vie
     // Involves populating data into the item through holder
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var data = dataList[position]
-        holder.title.text = data.title
         holder.image.setImageResource(data.image)
         holder.itemView.setOnClickListener {
             holder.image.setImageResource(R.color.red)
+            holder.title.text = "Box #$counter"
+            counter++
+            dataList[position].apply {
+                this.position = position
+            }
+            positions.add(position)
+
+            if (positions.size >= 3) {
+                notifyItemChanged(positions[positions.size - 2])
+                notifyItemChanged(positions[positions.size - 3])
+                //notifyItemChanged(positions[positions.size - 1])
+            }
+            Log.e("test", dataList.toString())
+        }
+        if (positions.size >= 3) {
+            if (positions[positions.size - 2] == position) {
+                holder.image.setImageResource(R.color.red)
+                holder.title.text = "Box #${counter - 2}"
+            } else if (positions[positions.size - 3] == position) {
+                holder.image.setImageResource(R.color.blue)
+                holder.title.text = "Box #${counter - 3}"
+            }
         }
     }
 

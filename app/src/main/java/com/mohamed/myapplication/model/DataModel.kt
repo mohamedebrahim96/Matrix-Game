@@ -7,7 +7,8 @@ package com.mohamed.myapplication.model
  */
 
 data class DataModel(
-    var title : String,
-    var desc : String,
-    var image : Int
+    var title: String,
+    var desc: String,
+    var image: Int,
+    var position: Int = 0
 )
